@@ -14,9 +14,9 @@
                 "${workspaceFolder}/build/**/*.js"
             ],
             "env": {
-                "HotWalletAccount": "herbivore",
-                "HotWalletActivePrivateKey": "5JcjhSQzfTUnQUXKCZupbBsGj6mkmTRxfzbMxiGBLxw9JjzXo66",
-                "LogsConnectionString": "UseDevelopmentStorage=true"
+                "HotWalletAccount": "",
+                "HotWalletActivePrivateKey": "",
+                "LogsConnectionString": ""
             }
         }
     ]

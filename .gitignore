@@ -56,3 +56,6 @@ jspm_packages/
 
 # next.js build output
 .next
+
+# VS Code misc files
+.vscode/*.json
