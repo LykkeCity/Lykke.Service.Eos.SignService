@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const routing_controllers_1 = require("routing-controllers");
 const class_validator_1 = require("class-validator");
+const logService_1 = require("../services/logService");
 const common_1 = require("../common");
 // EOSJS has no typings, so use it as regular node.js module
 const Eos = require("eosjs");
@@ -37,7 +38,10 @@ class SignTransactionResponse {
 }
 class TransactionContext {
 }
-let SignController = class SignController {
+let SignController = SignController_1 = class SignController {
+    constructor(log) {
+        this.log = log;
+    }
     /**
      * Signs transaction with provided private keys or/and with hot wallet private key, if necessary.
      * @param request Private keys and data of transaction to sign.
@@ -59,8 +63,9 @@ let SignController = class SignController {
         });
         // assembly the transaction - transactionHeaders() and 
         // signProvider() from the config above will be called
-        const data = await eos.transaction(ctx.actions);
-        return new SignTransactionResponse(common_1.toBase64(data.transaction));
+        const trx = await eos.transaction(ctx.actions);
+        await this.log.write(logService_1.LogLevel.info, SignController_1.name, this.signTransaction.name, "Tx signed", trx.transaction_id);
+        return new SignTransactionResponse(common_1.toBase64(trx.transaction));
     }
 };
 __decorate([
@@ -70,8 +75,10 @@ __decorate([
     __metadata("design:paramtypes", [SignTransactionRequest]),
     __metadata("design:returntype", Promise)
 ], SignController.prototype, "signTransaction", null);
-SignController = __decorate([
-    routing_controllers_1.JsonController("/sign")
+SignController = SignController_1 = __decorate([
+    routing_controllers_1.JsonController("/sign"),
+    __metadata("design:paramtypes", [logService_1.LogService])
 ], SignController);
 exports.SignController = SignController;
+var SignController_1;
 //# sourceMappingURL=signController.js.map

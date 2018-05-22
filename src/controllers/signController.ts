@@ -1,7 +1,7 @@
 import { JsonController, Param, Body, Get, Post, Put, Delete, BadRequestError } from "routing-controllers";
 import { IsArray, IsString, IsNotEmpty, IsBase64 } from "class-validator";
+import { LogService, LogLevel } from "../services/logService";
 import { fromBase64, toBase64 } from "../common";
-import util from "util";
 
 // EOSJS has no typings, so use it as regular node.js module
 const Eos = require("eosjs");
@@ -30,6 +30,10 @@ class TransactionContext {
 
 @JsonController("/sign")
 export class SignController {
+
+    constructor(private log: LogService) {
+    }
+
     /**
      * Signs transaction with provided private keys or/and with hot wallet private key, if necessary.
      * @param request Private keys and data of transaction to sign.
@@ -57,8 +61,10 @@ export class SignController {
 
         // assembly the transaction - transactionHeaders() and 
         // signProvider() from the config above will be called
-        const data = await eos.transaction(ctx.actions);
+        const trx = await eos.transaction(ctx.actions);
 
-        return new SignTransactionResponse(toBase64(data.transaction));
+        await this.log.write(LogLevel.info, SignController.name, this.signTransaction.name, "Tx signed", trx.transaction_id);
+
+        return new SignTransactionResponse(toBase64(trx.transaction));
     }
 }

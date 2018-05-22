@@ -8,24 +8,26 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 const routing_controllers_1 = require("routing-controllers");
-const uuid = __importStar(require("uuid"));
-let WalletsController = class WalletsController {
+const logService_1 = require("../services/logService");
+const uuid_1 = __importDefault(require("uuid"));
+let WalletsController = WalletsController_1 = class WalletsController {
+    constructor(log) {
+        this.log = log;
+    }
     /**
      * Creates a kind of "virtual" wallet in format "{ HotWalletAccount }/{ UniqueId }" for using as deposit wallet.
      * While sending funds user must use { HotWalletAccount } as "to" and { UniqueId } as "memo" fields of cash-in transaction action.
      */
     createWallet() {
+        const id = uuid_1.default.v4();
+        this.log.write(logService_1.LogLevel.info, WalletsController_1.name, this.createWallet.name, "Wallet generated", id);
         return {
-            publicAddress: `${process.env.hotWalletAccount}/${uuid.v4()}`
+            publicAddress: `${process.env.hotWalletAccount}/${id}`
         };
     }
 };
@@ -35,8 +37,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], WalletsController.prototype, "createWallet", null);
-WalletsController = __decorate([
-    routing_controllers_1.JsonController("/wallets")
+WalletsController = WalletsController_1 = __decorate([
+    routing_controllers_1.JsonController("/wallets"),
+    __metadata("design:paramtypes", [logService_1.LogService])
 ], WalletsController);
 exports.WalletsController = WalletsController;
+var WalletsController_1;
 //# sourceMappingURL=walletsController.js.map

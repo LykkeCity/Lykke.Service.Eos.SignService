@@ -9,7 +9,10 @@
   "author": "Lykke",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
+    "azure-storage": "^2.8.2",
     "eosjs": "^11.0.0",
+    "got": "^8.3.1",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.0",
     "koa-multer": "^1.0.2",
