@@ -10,13 +10,14 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/build/server.js",
             "preLaunchTask": "tsc: build - tsconfig.json",
+            "outputCapture": "std",
             "outFiles": [
                 "${workspaceFolder}/build/**/*.js"
             ],
             "env": {
                 "HotWalletAccount": "",
                 "HotWalletActivePrivateKey": "",
-                "LogsConnectionString": ""
+                "SettingsUrl": ""
             }
         }
     ]

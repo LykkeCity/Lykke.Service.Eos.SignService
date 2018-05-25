@@ -1,7 +1,6 @@
 import { Service } from "typedi";
-import { isObject, isNullOrUndefined, promisify } from "util";
-import { createTableService, createQueueService, TableService, TableUtilities, QueueService } from "azure-storage";
-import { Settings } from "../common";
+import { Settings, APP_NAME, APP_VERSION, ENV_INFO } from "../common";
+import axios from "axios"
 
 export enum LogLevel {
     error = "error",
@@ -12,17 +11,7 @@ export enum LogLevel {
 @Service()
 export class LogService {
 
-    private azureService: TableService;
-    private slackService: QueueService;
-    private gen = TableUtilities.entityGenerator;
-
-    constructor(settings: Settings) {
-        if (settings.EosSignService.LogsConnectionString) {
-            this.azureService = createTableService(settings.EosSignService.LogsConnectionString);
-        }
-        if (settings.SlackNotifications) {
-            this.slackService = createQueueService(settings.SlackNotifications.AzureQueue.ConnectionString)
-        }
+    constructor(private settings: Settings) {
     }
 
     /**
@@ -41,10 +30,26 @@ export class LogService {
 
         console.log(`${new Date().toISOString()} [${level}] ${component} : ${process} : ${message} : ${stack} : ${context}`);
 
-        if (this.azureService) {
-        }
-
-        if (this.slackService) {
+        if (!!this.settings.EosSignService &&
+            !!this.settings.EosSignService.LogAdapterUrl) {
+            try {
+                await axios.post(this.settings.EosSignService.LogAdapterUrl, {
+                    appName: APP_NAME,
+                    appVersion: APP_VERSION,
+                    envInfo: ENV_INFO,
+                    level,
+                    component,
+                    process,
+                    context,
+                    message,
+                    callstack: stack,
+                    exceptionType: type,
+                    additionalSlackChannels: this.settings.EosSignService.LogSlackChannels
+                });
+            } catch (err) {
+                console.warn("LogAdapter is configured, but throws error:");
+                console.warn(err);
+            }
         }
     }
 }

@@ -8,10 +8,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+}
 Object.defineProperty(exports, "__esModule", { value: true });
 const typedi_1 = require("typedi");
-const azure_storage_1 = require("azure-storage");
 const common_1 = require("../common");
+const axios_1 = __importDefault(require("axios"));
 var LogLevel;
 (function (LogLevel) {
     LogLevel["error"] = "error";
@@ -20,13 +23,7 @@ var LogLevel;
 })(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
 let LogService = class LogService {
     constructor(settings) {
-        this.gen = azure_storage_1.TableUtilities.entityGenerator;
-        if (settings.EosSignService.LogsConnectionString) {
-            this.azureService = azure_storage_1.createTableService(settings.EosSignService.LogsConnectionString);
-        }
-        if (settings.SlackNotifications) {
-            this.slackService = azure_storage_1.createQueueService(settings.SlackNotifications.AzureQueue.ConnectionString);
-        }
+        this.settings = settings;
     }
     /**
      * Writes log entry to all configured stores (console by default).
@@ -41,9 +38,27 @@ let LogService = class LogService {
      */
     async write(level, component, process, message, context, type, stack) {
         console.log(`${new Date().toISOString()} [${level}] ${component} : ${process} : ${message} : ${stack} : ${context}`);
-        if (this.azureService) {
-        }
-        if (this.slackService) {
+        if (!!this.settings.EosSignService &&
+            !!this.settings.EosSignService.LogAdapterUrl) {
+            try {
+                await axios_1.default.post(this.settings.EosSignService.LogAdapterUrl, {
+                    appName: common_1.APP_NAME,
+                    appVersion: common_1.APP_VERSION,
+                    envInfo: common_1.ENV_INFO,
+                    level,
+                    component,
+                    process,
+                    context,
+                    message,
+                    callstack: stack,
+                    exceptionType: type,
+                    additionalSlackChannels: this.settings.EosSignService.LogSlackChannels
+                });
+            }
+            catch (err) {
+                console.warn("LogAdapter is configured, but throws error:");
+                console.warn(err);
+            }
         }
     }
 };

@@ -1,10 +1,9 @@
 import "reflect-metadata";
-import { Container, Token } from "typedi";
+import { Container } from "typedi";
 import { createKoaServer, useContainer } from "routing-controllers";
 import { loadSettings, Settings } from "./common";
 
-// DI initialization for routing-controllers must go first,
-// before any aother action 
+// DI initialization for routing-controllers must go first, before any aother action 
 useContainer(Container);
 
 loadSettings()

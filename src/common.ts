@@ -2,6 +2,14 @@ import axios from "axios";
 import fs from "fs";
 import util from "util";
 
+const pkg = require("../package.json");
+
+export const APP_NAME = pkg.name.split(".").map((x: string) => `${x.charAt(0).toUpperCase()}${x.slice(1)}`).join(".");
+
+export const APP_VERSION = pkg.version;
+
+export const ENV_INFO = process.env.ENV_INFO;
+
 export enum Encoding {
     base64 = "base64",
     utf8 = "utf8"
@@ -29,13 +37,8 @@ export function fromBase64<T>(str: string): T {
  */
 export class Settings {
     EosSignService: {
-        LogsConnectionString: string;
-    };
-    SlackNotifications: {
-        AzureQueue: {
-            ConnectionString: string;
-            QueueName: string;
-        }
+        LogAdapterUrl: string;
+        LogSlackChannels: string[];
     };
 }
 

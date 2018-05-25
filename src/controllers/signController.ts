@@ -1,4 +1,4 @@
-import { JsonController, Param, Body, Get, Post, Put, Delete, BadRequestError } from "routing-controllers";
+import { JsonController, Body, Post } from "routing-controllers";
 import { IsArray, IsString, IsNotEmpty, IsBase64 } from "class-validator";
 import { LogService, LogLevel } from "../services/logService";
 import { fromBase64, toBase64 } from "../common";

@@ -4,8 +4,7 @@ require("reflect-metadata");
 const typedi_1 = require("typedi");
 const routing_controllers_1 = require("routing-controllers");
 const common_1 = require("./common");
-// DI initialization for routing-controllers must go first,
-// before any aother action 
+// DI initialization for routing-controllers must go first, before any aother action 
 routing_controllers_1.useContainer(typedi_1.Container);
 common_1.loadSettings()
     .then(settings => {
