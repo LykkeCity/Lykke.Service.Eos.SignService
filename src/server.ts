@@ -17,7 +17,7 @@ loadSettings()
             routePrefix: "/api"
         });
 
-        koa.listen(5000);
+        koa.listen(5001);
     })
     .then(
         _ => console.log("Started"),

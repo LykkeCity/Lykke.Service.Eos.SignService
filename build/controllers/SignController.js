@@ -52,20 +52,22 @@ let SignController = SignController_1 = class SignController {
         // remove stubs of "virtual" deposit wallets keys
         const privateKeys = request.privateKeys.filter(k => !!k);
         // append hot wallet private key, if necessary
-        if (ctx.actions.some(a => a.data.from == process.env.HotWalletAccount)) {
+        if (ctx.actions.some(a => a.data.from == process.env.HotWalletAccount) && privateKeys.indexOf(process.env.HotWalletActivePrivateKey) < 0) {
             privateKeys.push(process.env.HotWalletActivePrivateKey);
         }
         // configure EOS to build and sign, but not broadcast transactions
         const eos = Eos.Localnet({
-            signProvider: (args) => privateKeys.map(k => args.sign(args.buf, k)),
+            chainId: ctx.chainId,
             transactionHeaders: (expireInSeconds, callback) => callback(null, ctx.headers),
-            broadcast: false
+            signProvider: (args) => privateKeys.map(k => args.sign(args.buf, k)),
         });
         // assembly the transaction - transactionHeaders() and 
         // signProvider() from the config above will be called
-        const trx = await eos.transaction(ctx.actions);
-        await this.log.write(logService_1.LogLevel.info, SignController_1.name, this.signTransaction.name, "Tx signed", trx.transaction_id);
-        return new SignTransactionResponse(common_1.toBase64(trx.transaction));
+        const signed = await eos.transaction(ctx, {
+            broadcast: false
+        });
+        await this.log.write(logService_1.LogLevel.info, SignController_1.name, this.signTransaction.name, "Tx signed", signed.transaction_id);
+        return new SignTransactionResponse(common_1.toBase64(signed.transaction));
     }
 };
 __decorate([

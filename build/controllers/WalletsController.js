@@ -27,7 +27,7 @@ let WalletsController = WalletsController_1 = class WalletsController {
         const id = uuid_1.default.v4();
         this.log.write(logService_1.LogLevel.info, WalletsController_1.name, this.createWallet.name, "Wallet generated", id);
         return {
-            publicAddress: `${process.env.hotWalletAccount}/${id}`
+            publicAddress: `${process.env.hotWalletAccount}$${id}`
         };
     }
 };

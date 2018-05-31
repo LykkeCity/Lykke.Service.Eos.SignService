@@ -24,6 +24,7 @@ class SignTransactionResponse {
 }
 
 class TransactionContext {
+    chainId: string;
     headers: any[];
     actions: any[];
 }
@@ -44,27 +45,33 @@ export class SignController {
         // context actually is a disassembled transaction
         const ctx = fromBase64<TransactionContext>(request.transactionContext);
 
+        if (ctx.actions.length == 0) {
+            
+        }
+
         // remove stubs of "virtual" deposit wallets keys
         const privateKeys = request.privateKeys.filter(k => !!k);
 
         // append hot wallet private key, if necessary
-        if (ctx.actions.some(a => a.data.from == process.env.HotWalletAccount)) {
+        if (ctx.actions.some(a => a.data.from == process.env.HotWalletAccount) && privateKeys.indexOf(process.env.HotWalletActivePrivateKey) < 0) {
             privateKeys.push(process.env.HotWalletActivePrivateKey);
         }
 
         // configure EOS to build and sign, but not broadcast transactions
         const eos = Eos.Localnet({
-            signProvider: (args: any) => privateKeys.map(k => args.sign(args.buf, k)),
+            chainId: ctx.chainId,
             transactionHeaders: (expireInSeconds: number, callback: Function) => callback(null, ctx.headers),
-            broadcast: false
+            signProvider: (args: any) => privateKeys.map(k => args.sign(args.buf, k)),
         });
 
         // assembly the transaction - transactionHeaders() and 
         // signProvider() from the config above will be called
-        const trx = await eos.transaction(ctx.actions);
+        const signed = await eos.transaction(ctx, {
+            broadcast: false
+        });
 
-        await this.log.write(LogLevel.info, SignController.name, this.signTransaction.name, "Tx signed", trx.transaction_id);
+        await this.log.write(LogLevel.info, SignController.name, this.signTransaction.name, "Tx signed", signed.transaction_id);
 
-        return new SignTransactionResponse(toBase64(trx.transaction));
+        return new SignTransactionResponse(toBase64(signed.transaction));
     }
 }

@@ -19,7 +19,7 @@ export class WalletsController {
         this.log.write(LogLevel.info, WalletsController.name, this.createWallet.name, "Wallet generated", id);
 
         return {
-            publicAddress: `${process.env.hotWalletAccount}/${id}`
+            publicAddress: `${process.env.hotWalletAccount}$${id}`
         };
     }
 }

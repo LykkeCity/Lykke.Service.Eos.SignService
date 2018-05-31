@@ -15,7 +15,7 @@ common_1.loadSettings()
         middlewares: [`${__dirname}/middlewares/*js`],
         routePrefix: "/api"
     });
-    koa.listen(5000);
+    koa.listen(5001);
 })
     .then(_ => console.log("Started"), e => console.log(e));
 //# sourceMappingURL=server.js.map
