@@ -10,6 +10,7 @@ const pkg = require("../package.json");
 exports.APP_NAME = pkg.name.split(".").map((x) => `${x.charAt(0).toUpperCase()}${x.slice(1)}`).join(".");
 exports.APP_VERSION = pkg.version;
 exports.ENV_INFO = process.env.ENV_INFO;
+exports.ADDRESS_SEPARATOR = "$";
 var Encoding;
 (function (Encoding) {
     Encoding["base64"] = "base64";

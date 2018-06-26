@@ -49,6 +49,8 @@ let SignController = SignController_1 = class SignController {
     async signTransaction(request) {
         // context actually is a disassembled transaction
         const ctx = common_1.fromBase64(request.transactionContext);
+        if (ctx.actions.length == 0) {
+        }
         // remove stubs of "virtual" deposit wallets keys
         const privateKeys = request.privateKeys.filter(k => !!k);
         // append hot wallet private key, if necessary
@@ -61,7 +63,7 @@ let SignController = SignController_1 = class SignController {
             transactionHeaders: (expireInSeconds, callback) => callback(null, ctx.headers),
             signProvider: (args) => privateKeys.map(k => args.sign(args.buf, k)),
         });
-        // assembly the transaction - transactionHeaders() and 
+        // assembly the transaction - transactionHeaders() and
         // signProvider() from the config above will be called
         const signed = await eos.transaction(ctx, {
             broadcast: false

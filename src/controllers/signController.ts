@@ -46,7 +46,7 @@ export class SignController {
         const ctx = fromBase64<TransactionContext>(request.transactionContext);
 
         if (ctx.actions.length == 0) {
-            
+
         }
 
         // remove stubs of "virtual" deposit wallets keys
@@ -64,7 +64,7 @@ export class SignController {
             signProvider: (args: any) => privateKeys.map(k => args.sign(args.buf, k)),
         });
 
-        // assembly the transaction - transactionHeaders() and 
+        // assembly the transaction - transactionHeaders() and
         // signProvider() from the config above will be called
         const signed = await eos.transaction(ctx, {
             broadcast: false

@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const routing_controllers_1 = require("routing-controllers");
 const logService_1 = require("../services/logService");
+const common_1 = require("../common");
 const uuid_1 = __importDefault(require("uuid"));
 let WalletsController = WalletsController_1 = class WalletsController {
     constructor(log) {
@@ -27,7 +28,7 @@ let WalletsController = WalletsController_1 = class WalletsController {
         const id = uuid_1.default.v4();
         this.log.write(logService_1.LogLevel.info, WalletsController_1.name, this.createWallet.name, "Wallet generated", id);
         return {
-            publicAddress: `${process.env.hotWalletAccount}$${id}`
+            publicAddress: `${process.env.hotWalletAccount}${common_1.ADDRESS_SEPARATOR}${id}`
         };
     }
 };

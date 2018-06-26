@@ -10,6 +10,8 @@ export const APP_VERSION = pkg.version;
 
 export const ENV_INFO = process.env.ENV_INFO;
 
+export const ADDRESS_SEPARATOR = "$";
+
 export enum Encoding {
     base64 = "base64",
     utf8 = "utf8"

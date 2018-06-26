@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
-    "eosjs": "^13.0.0",
+    "eosjs": "^15.0.3",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-multer": "^1.0.2",
@@ -21,10 +21,10 @@
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@types/koa": "^2.0.45",
+    "@types/koa": "^2.0.46",
     "@types/koa-bodyparser": "^4.2.0",
-    "@types/koa-router": "^7.0.28",
-    "@types/node": "^10.1.4",
+    "@types/koa-router": "^7.0.30",
+    "@types/node": "^10.3.6",
     "@types/uuid": "^3.4.3"
   }
 }
