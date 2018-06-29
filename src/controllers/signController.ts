@@ -46,7 +46,9 @@ export class SignController {
         const ctx = fromBase64<TransactionContext>(request.transactionContext);
 
         if (ctx.actions.length == 0) {
-
+            return new SignTransactionResponse(toBase64({
+                txId: "0x"
+            }));
         }
 
         // remove stubs of "virtual" deposit wallets keys
