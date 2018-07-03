@@ -50,6 +50,9 @@ let SignController = SignController_1 = class SignController {
         // context actually is a disassembled transaction
         const ctx = common_1.fromBase64(request.transactionContext);
         if (ctx.actions.length == 0) {
+            return new SignTransactionResponse(common_1.toBase64({
+                txId: "0x"
+            }));
         }
         // remove stubs of "virtual" deposit wallets keys
         const privateKeys = request.privateKeys.filter(k => !!k);

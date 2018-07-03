@@ -17,18 +17,19 @@ const logService_1 = require("../services/logService");
 const common_1 = require("../common");
 const uuid_1 = __importDefault(require("uuid"));
 let WalletsController = WalletsController_1 = class WalletsController {
-    constructor(log) {
+    constructor(log, settings) {
         this.log = log;
+        this.settings = settings;
     }
     /**
      * Creates a kind of "virtual" wallet in format "{ HotWalletAccount }/{ UniqueId }" for using as deposit wallet.
      * While sending funds user must use { HotWalletAccount } as "to" and { UniqueId } as "memo" fields of cash-in transaction action.
      */
     createWallet() {
-        const id = uuid_1.default.v4();
-        this.log.write(logService_1.LogLevel.info, WalletsController_1.name, this.createWallet.name, "Wallet generated", id);
+        let publicAddress = `${this.settings.EosSignService.HotWalletAccount}${common_1.ADDRESS_SEPARATOR}${uuid_1.default.v4()}`;
+        this.log.write(logService_1.LogLevel.info, WalletsController_1.name, this.createWallet.name, "Wallet generated", publicAddress);
         return {
-            publicAddress: `${process.env.hotWalletAccount}${common_1.ADDRESS_SEPARATOR}${id}`
+            publicAddress
         };
     }
 };
@@ -40,7 +41,7 @@ __decorate([
 ], WalletsController.prototype, "createWallet", null);
 WalletsController = WalletsController_1 = __decorate([
     routing_controllers_1.JsonController("/wallets"),
-    __metadata("design:paramtypes", [logService_1.LogService])
+    __metadata("design:paramtypes", [logService_1.LogService, common_1.Settings])
 ], WalletsController);
 exports.WalletsController = WalletsController;
 var WalletsController_1;
