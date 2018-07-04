@@ -1,6 +1,6 @@
 {
   "name": "lykke.service.eos.signservice",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Lykke adapter to EOS.IO blockchain, signing API",
   "main": "./build/server.js",
   "scripts": {
