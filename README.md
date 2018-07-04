@@ -1,13 +1,8 @@
 # Lykke.Service.Eos.SignService
 
-## Settings
+## Custom environment variables
 
-This service doesn't get settings from settings service.
-Instead, all settings are provided through environment variables:
-
-- `HotWalletAccount` - hot wallet account name
 - `HotWalletActivePrivateKey` - hot wallet account private key for `active` permissions
-- `LogsConnectionString` - connection string to an Azure storage accout for logs
 
 ## Debug
 
