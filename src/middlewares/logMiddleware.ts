@@ -21,8 +21,8 @@ export class LogMiddleware implements KoaMiddlewareInterface {
                 : LogLevel.error;
             const component = LogMiddleware.name;
             const process = ctx.url;
-            const message = ctx.body && ctx.body.message || ctx.message;
-            const context = ctx.request.body && JSON.stringify(ctx.request.body);
+            const message = ctx.body && (ctx.body.errorMessage || ctx.body.message || ctx.message);
+            const context = JSON.stringify({ request: ctx.request.body, response: ctx.body });
             const error = ctx.body && ctx.body.name;
             const stack = ctx.body && ctx.body.stack;
 
