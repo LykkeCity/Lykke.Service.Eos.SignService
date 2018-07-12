@@ -1,6 +1,6 @@
 import { JsonController, Post } from "routing-controllers";
 import { LogLevel, LogService } from "../services/logService";
-import { ADDRESS_SEPARATOR, Settings } from "../common";
+import { ADDRESS_SEPARATOR, Settings, DUMMY_PRIVATE_KEY } from "../common";
 import uuid from "uuid";
 
 @JsonController("/wallets")
@@ -20,6 +20,7 @@ export class WalletsController {
         this.log.write(LogLevel.info, WalletsController.name, this.createWallet.name, "Wallet generated", publicAddress);
 
         return {
+            privateKey: DUMMY_PRIVATE_KEY,
             publicAddress
         };
     }

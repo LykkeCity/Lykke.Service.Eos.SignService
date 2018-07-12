@@ -12,6 +12,8 @@ export const ENV_INFO = process.env.ENV_INFO;
 
 export const ADDRESS_SEPARATOR = "$";
 
+export const DUMMY_PRIVATE_KEY = "IDDQD";
+
 export enum Encoding {
     base64 = "base64",
     utf8 = "utf8"

@@ -1,7 +1,7 @@
 import { JsonController, Body, Post } from "routing-controllers";
 import { IsArray, IsString, IsNotEmpty, IsBase64 } from "class-validator";
 import { LogService, LogLevel } from "../services/logService";
-import { fromBase64, toBase64 } from "../common";
+import { fromBase64, toBase64, DUMMY_PRIVATE_KEY } from "../common";
 
 // EOSJS has no typings, so use it as regular node.js module
 const Eos = require("eosjs");
@@ -52,7 +52,7 @@ export class SignController {
         }
 
         // remove stubs of "virtual" deposit wallets keys
-        const privateKeys = request.privateKeys.filter(k => !!k);
+        const privateKeys = request.privateKeys.filter(k => !!k && k != DUMMY_PRIVATE_KEY);
 
         // append hot wallet private key, if necessary
         if (ctx.actions.some(a => a.data.from == process.env.HotWalletAccount) && privateKeys.indexOf(process.env.HotWalletActivePrivateKey) < 0) {
