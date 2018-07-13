@@ -47,7 +47,7 @@ export class SignController {
 
         if (ctx.actions.length == 0) {
             return new SignTransactionResponse(toBase64({
-                txId: "0x"
+                txId: Date.now().toFixed()
             }));
         }
 
