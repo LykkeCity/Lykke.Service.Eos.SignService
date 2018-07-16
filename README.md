@@ -1,9 +1,5 @@
 # Lykke.Service.Eos.SignService
 
-## Custom environment variables
-
-- `HotWalletActivePrivateKey` - hot wallet account private key for `active` permissions
-
 ## Debug
 
 `./.vscode/launch.json_` example is provided for debugging with VS Code. Fill in `configurations[..].env` properties with actual values before start.

@@ -12,7 +12,7 @@ export const ENV_INFO = process.env.ENV_INFO;
 
 export const ADDRESS_SEPARATOR = "$";
 
-export const DUMMY_PRIVATE_KEY = "IDDQD";
+export const DUMMY_PRIVATE_KEY = "dummy_private_key";
 
 export enum Encoding {
     base64 = "base64",

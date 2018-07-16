@@ -1,7 +1,7 @@
 import { JsonController, Body, Post } from "routing-controllers";
 import { IsArray, IsString, IsNotEmpty, IsBase64 } from "class-validator";
 import { LogService, LogLevel } from "../services/logService";
-import { fromBase64, toBase64, DUMMY_PRIVATE_KEY } from "../common";
+import { fromBase64, toBase64 } from "../common";
 
 // EOSJS has no typings, so use it as regular node.js module
 const Eos = require("eosjs");
@@ -45,25 +45,18 @@ export class SignController {
         // context actually is a disassembled transaction
         const ctx = fromBase64<TransactionContext>(request.transactionContext);
 
+        // for DW -> HW transfer we shouldn't have any real action
         if (ctx.actions.length == 0) {
             return new SignTransactionResponse(toBase64({
                 txId: Date.now().toFixed()
             }));
         }
 
-        // remove stubs of "virtual" deposit wallets keys
-        const privateKeys = request.privateKeys.filter(k => !!k && k != DUMMY_PRIVATE_KEY);
-
-        // append hot wallet private key, if necessary
-        if (ctx.actions.some(a => a.data.from == process.env.HotWalletAccount) && privateKeys.indexOf(process.env.HotWalletActivePrivateKey) < 0) {
-            privateKeys.push(process.env.HotWalletActivePrivateKey);
-        }
-
         // configure EOS to build and sign, but not broadcast transactions
         const eos = Eos.Localnet({
             chainId: ctx.chainId,
             transactionHeaders: (expireInSeconds: number, callback: Function) => callback(null, ctx.headers),
-            signProvider: (args: any) => privateKeys.map(k => args.sign(args.buf, k)),
+            signProvider: (args: any) => request.privateKeys.map(k => args.sign(args.buf, k)),
         });
 
         // assembly the transaction - transactionHeaders() and

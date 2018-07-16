@@ -15,7 +15,6 @@
                 "${workspaceFolder}/build/**/*.js"
             ],
             "env": {
-                "HotWalletActivePrivateKey": "",
                 "SettingsUrl": ""
             }
         }
