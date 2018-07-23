@@ -44,6 +44,7 @@ export class Settings {
         LogAdapterUrl: string;
         LogSlackChannels: string[];
         HotWalletAccount: string;
+        HotWalletActivePublicKey: string;
     };
 }
 

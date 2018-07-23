@@ -1,10 +1,11 @@
-import { JsonController, Body, Post } from "routing-controllers";
+import { JsonController, Body, Post, BadRequestError } from "routing-controllers";
 import { IsArray, IsString, IsNotEmpty, IsBase64 } from "class-validator";
 import { LogService, LogLevel } from "../services/logService";
-import { fromBase64, toBase64 } from "../common";
+import { fromBase64, toBase64, Settings } from "../common";
 
 // EOSJS has no typings, so use it as regular node.js module
 const Eos = require("eosjs");
+const ecc = require("eosjs-ecc");
 
 class SignTransactionRequest {
 
@@ -32,7 +33,7 @@ class TransactionContext {
 @JsonController("/sign")
 export class SignController {
 
-    constructor(private log: LogService) {
+    constructor(private log: LogService, private settings: Settings) {
     }
 
     /**
@@ -45,8 +46,12 @@ export class SignController {
         // context actually is a disassembled transaction
         const ctx = fromBase64<TransactionContext>(request.transactionContext);
 
-        // for DW -> HW transfer we shouldn't have any real action
+        // for simulated transactions (i.e. DW -> HW) we don't have any real action,
+        // but we protect such activities with HW private key
         if (ctx.actions.length == 0) {
+            if (request.privateKeys.some(k => ecc.PrivateKey.fromString(k).toPublic().toString() != this.settings.EosSignService.HotWalletActivePublicKey)) {
+                throw new BadRequestError("Invalid private key(s)");
+            }
             return new SignTransactionResponse(toBase64({
                 txId: Date.now().toFixed()
             }));
