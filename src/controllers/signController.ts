@@ -34,6 +34,7 @@ class TransactionContext {
 export class SignController {
 
     constructor(private log: LogService, private settings: Settings) {
+        ecc.initialize();
     }
 
     /**
@@ -46,12 +47,17 @@ export class SignController {
         // context actually is a disassembled transaction
         const ctx = fromBase64<TransactionContext>(request.transactionContext);
 
-        // for simulated transactions (i.e. DW -> HW) we don't have any real action,
+        // for real transactions real privite keys are required;
+        // for simulated transactions (i.e. DW -> HW) we don't have any real action, 
         // but we protect such activities with HW private key
+        if (!request.privateKeys.length ||
+            !request.privateKeys.every(k => ecc.isValidPrivate(k)) || 
+            (ctx.actions.length == 0 && request.privateKeys.some(k => ecc.PrivateKey.fromString(k).toPublic().toString() != this.settings.EosSignService.HotWalletActivePublicKey))) {
+            throw new BadRequestError("Invalid private key(s)");
+        }
+
+        // for simulated transactions we use timestamp as tx ID
         if (ctx.actions.length == 0) {
-            if (request.privateKeys.some(k => ecc.PrivateKey.fromString(k).toPublic().toString() != this.settings.EosSignService.HotWalletActivePublicKey)) {
-                throw new BadRequestError("Invalid private key(s)");
-            }
             return new SignTransactionResponse(toBase64({
                 txId: Date.now().toFixed()
             }));
