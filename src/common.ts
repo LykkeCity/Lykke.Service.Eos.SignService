@@ -41,8 +41,6 @@ export function fromBase64<T>(str: string): T {
  */
 export class Settings {
     EosSignService: {
-        LogAdapterUrl: string;
-        LogSlackChannels: string[];
         HotWalletAccount: string;
         HotWalletActivePublicKey: string;
     };
