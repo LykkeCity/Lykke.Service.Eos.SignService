@@ -1,6 +1,5 @@
 import { JsonController, Body, Post, BadRequestError } from "routing-controllers";
 import { IsArray, IsString, IsNotEmpty, IsBase64 } from "class-validator";
-import { LogService, LogLevel } from "../services/logService";
 import { fromBase64, toBase64, Settings } from "../common";
 
 // EOSJS has no typings, so use it as regular node.js module
@@ -33,7 +32,7 @@ class TransactionContext {
 @JsonController("/sign")
 export class SignController {
 
-    constructor(private log: LogService, private settings: Settings) {
+    constructor(private settings: Settings) {
         ecc.initialize();
     }
 
@@ -75,8 +74,6 @@ export class SignController {
         const signed = await eos.transaction(ctx, {
             broadcast: false
         });
-
-        await this.log.write(LogLevel.info, SignController.name, this.signTransaction.name, "Tx signed", signed.transaction_id);
 
         return new SignTransactionResponse(toBase64(signed.transaction));
     }
