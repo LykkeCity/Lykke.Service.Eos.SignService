@@ -1,3 +1,4 @@
+import { Container } from "typedi";
 import axios from "axios";
 import fs from "fs";
 import util from "util";
@@ -74,4 +75,8 @@ export function startAppInsights() {
         .setAutoCollectConsole(true)
         .setUseDiskRetryCaching(true)
         .start();
+    
+    // register client in DI container
+    // so it could be used by services
+    Container.set(appInsights.TelemetryClient, appInsights.defaultClient);
 }
