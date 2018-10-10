@@ -58,7 +58,7 @@ export class SignController {
         // for simulated transactions we use timestamp as tx ID
         if (ctx.actions.length == 0) {
             return new SignTransactionResponse(toBase64({
-                txId: Date.now().toFixed()
+                transaction_id: Date.now().toFixed()
             }));
         }
 
@@ -75,6 +75,6 @@ export class SignController {
             broadcast: false
         });
 
-        return new SignTransactionResponse(toBase64(signed.transaction));
+        return new SignTransactionResponse(toBase64(signed));
     }
 }
