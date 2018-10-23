@@ -63,10 +63,11 @@ export class SignController {
         }
 
         // configure EOS to build and sign, but not broadcast transactions
-        const eos = Eos.Localnet({
+        const eos = Eos({
             chainId: ctx.chainId,
             transactionHeaders: (expireInSeconds: number, callback: Function) => callback(null, ctx.headers),
             signProvider: (args: any) => request.privateKeys.map(k => args.sign(args.buf, k)),
+            httpEndpoint: null
         });
 
         // assembly the transaction - transactionHeaders() and
