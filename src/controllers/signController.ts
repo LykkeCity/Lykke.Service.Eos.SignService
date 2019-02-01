@@ -57,9 +57,7 @@ export class SignController {
 
         // for simulated transactions we use timestamp as tx ID
         if (ctx.actions.length == 0) {
-            return new SignTransactionResponse(toBase64({
-                transaction_id: Date.now().toFixed()
-            }));
+            return new SignTransactionResponse(toBase64({}));
         }
 
         // configure EOS to build and sign, but not broadcast transactions
