@@ -55,11 +55,9 @@ export class SignController {
             throw new BadRequestError("Invalid private key(s)");
         }
 
-        // for simulated transactions we use timestamp as tx ID
+        // for simulated transactions we will use operation ID as tx ID
         if (ctx.actions.length == 0) {
-            return new SignTransactionResponse(toBase64({
-                transaction_id: Date.now().toFixed()
-            }));
+            return new SignTransactionResponse(toBase64({}));
         }
 
         // configure EOS to build and sign, but not broadcast transactions
