@@ -17,7 +17,7 @@
     "@types/uuid": "^3.4.3",
     "applicationinsights": "^1.0.4",
     "axios": "^0.18.0",
-    "eosjs": "^16.0.0",
+    "eosjs": "^16.0.8",
     "koa": "^2.5.1",
     "koa-bodyparser": "^4.2.1",
     "koa-multer": "^1.0.2",
